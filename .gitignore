@@ -1,2 +1,11 @@
 *.class
 *.log
+logs
+project/project
+project/target
+target
+tmp
+dist
+.cache
+RUNNING_PID
+.g8
