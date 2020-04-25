@@ -10,4 +10,5 @@ GET     /                           controllers.HomeController.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Location routes
+GET     /api/location/list              controllers.LocationController.getListOfKnownLocations
 GET     /api/location/:locationname     controllers.LocationController.aggregationByLocation(locationname)

@@ -9,3 +9,5 @@ dist
 .cache
 RUNNING_PID
 .g8
+.bloop
+metals.sbt
