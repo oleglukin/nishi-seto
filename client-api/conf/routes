@@ -10,5 +10,10 @@ GET     /                           controllers.HomeController.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Location routes
-GET     /api/location/list              controllers.LocationController.getListOfKnownLocations
-GET     /api/location/:locationname     controllers.LocationController.aggregationByLocation(locationname)
+GET     /api/location/list                  controllers.LocationController.getListOfKnownLocations
+GET     /api/location/agg-:locationname     controllers.LocationController.getAggregationByLocation(locationname)
+GET     /api/location/all                   controllers.LocationController.getAllAggregations
+GET     /api/location/totalevents           controllers.LocationController.getTotalEvents
+POST    /api/location/agg-:locationname     controllers.LocationController.newLocationAggregation(locationname)
+DELETE  /api/location/agg-:locationname     controllers.LocationController.removeAggregation(locationname)
+DELETE  /api/location/all                   controllers.LocationController.clearAllAggregations
