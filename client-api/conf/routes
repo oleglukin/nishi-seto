@@ -9,11 +9,11 @@ GET     /                           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-# Location routes
-GET     /api/location/list                  controllers.LocationController.getListOfKnownLocations
-GET     /api/location/agg-:locationname     controllers.LocationController.getAggregationByLocation(locationname)
-GET     /api/location/all                   controllers.LocationController.getAllAggregations
-GET     /api/location/totalevents           controllers.LocationController.getTotalEvents
-POST    /api/location/agg-:locationname     controllers.LocationController.newLocationAggregation(locationname)
-DELETE  /api/location/agg-:locationname     controllers.LocationController.removeAggregation(locationname)
-DELETE  /api/location/all                   controllers.LocationController.clearAllAggregations
+# Signal source routes
+GET     /api/source/list                  controllers.SignalSourceController.getListOfKnownsources
+GET     /api/source/agg-:sourcename     controllers.SignalSourceController.getAggregationBysource(sourcename)
+GET     /api/source/all                   controllers.SignalSourceController.getAllAggregations
+GET     /api/source/totalevents           controllers.SignalSourceController.getTotalEvents
+POST    /api/source/agg-:sourcename     controllers.SignalSourceController.newsourceAggregation(sourcename)
+DELETE  /api/source/agg-:sourcename     controllers.SignalSourceController.removeAggregation(sourcename)
+DELETE  /api/source/all                   controllers.SignalSourceController.clearAllAggregations

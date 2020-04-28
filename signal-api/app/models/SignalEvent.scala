@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import play.api.libs.json.Json
 
 final case class SignalEvent(
-    location: String,
+    source: String, // signal source id/name
     attribute: String,
     uom: String, // Unit of Measure
     value: String//,
