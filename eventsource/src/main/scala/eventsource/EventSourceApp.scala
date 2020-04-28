@@ -1,10 +1,12 @@
 package eventsource
 
 import scala.collection.immutable.NumericRange
+import scalaj.http._
 import java.time.LocalDateTime
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
+
 
 object EventSourceApp {
   val chUpper = ('A' to 'Z')
@@ -25,6 +27,7 @@ object EventSourceApp {
     val events = 16
     val maxeventSourceIds = 10
     val maxIntervalMs = 5
+    val url = ""
 
     // TODO read config from file
 
@@ -37,11 +40,12 @@ object EventSourceApp {
 
     // there is no asynchronouse or parallel execution on purpose
     (1 to events).foreach(i => {
+      Thread.sleep(getRandomInt(maxIntervalMs))
       val json = generateRandomEvent(sourcesIds, attributesConfig, i)
 
       println(json)
 
-      Thread.sleep(getRandomInt(maxIntervalMs))
+      Http(url).postData(json ).header("content-type", "application/json").asString.code
 
 
       if (events > 1000 && i%1000 == 0) {
