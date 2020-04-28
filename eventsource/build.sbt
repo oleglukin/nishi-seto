@@ -12,3 +12,7 @@ lazy val root = (project in file("."))
   )
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
+
+
+// https://mvnrepository.com/artifact/org.json4s/json4s-jackson
+libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.6.7"

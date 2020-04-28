@@ -2,6 +2,9 @@ package eventsource
 
 import scala.collection.immutable.NumericRange
 import java.time.LocalDateTime
+import org.json4s._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
 
 object EventSourceApp {
   val chUpper = ('A' to 'Z')
@@ -10,7 +13,7 @@ object EventSourceApp {
   def main(args: Array[String]): Unit = {
 
     // attribute name, uom, min value, max value
-    val attributesConfig = Seq(
+    val attributesConfig = IndexedSeq(
       ("engine speed", "rpm", 0, 1400),
       ("engine temperature", "celsius", 0, 600),
       ("oil level", "percentage", 0, 100),
@@ -27,25 +30,24 @@ object EventSourceApp {
 
     val sourcesIds = getSources(maxeventSourceIds)
 
-    println(s"${LocalDateTime.now}\nGenerating $events events for ${sourcesIds.length} sources. Max interval between requests: $maxIntervalMs ms\nEvent sources:")
-    sourcesIds foreach println
-
+    print(s"${LocalDateTime.now}\nGenerating $events events for ${sourcesIds.length} sources. Max interval between requests: $maxIntervalMs ms\nEvent sources:")
+    sourcesIds.foreach(sid => print(sid + " "))
+    println
     if (events > 1000) println("Events generation progress x1000:")
 
     // there is no asynchronouse or parallel execution on purpose
     (1 to events).foreach(i => {
-      val json = generateRandomEvent(sourcesIds, i)
+      val json = generateRandomEvent(sourcesIds, attributesConfig, i)
 
       println(json)
 
-      val delay = getRandomInt(maxIntervalMs)
+      Thread.sleep(getRandomInt(maxIntervalMs))
 
 
       if (events > 1000 && i%1000 == 0) {
         print(s"${i/1000} ");
       }
     })
-
   }
 
 
@@ -56,12 +58,21 @@ object EventSourceApp {
 
   def getString(length: Int, chars: IndexedSeq[Char]) = (1 to length).map(_ => getRandomChar(chars)).mkString
   def getRandomInt(max: Int) = util.Random.nextInt(max)
+  def getRandomIntMinMax(min: Int, max: Int) = getRandomInt(max - min) + min
   def getRandomChar(chars: IndexedSeq[Char]) = chars(getRandomInt(chars.length))
   def getStringUpperCase(length: Int) = getString(length, chUpper)
   def getStringNumeric(length: Int) = getString(length, chNum)
   def getStringUpperCaseAlphaNumeric(length: Int) = getString(length, (chUpper ++ chNum))
 
-  def generateRandomEvent(sourcesIds: IndexedSeq[String], i: Int): String = {
-    "{\"source\":\"src\",\"attribute\":\"attr\",\"uom\":\"bromid\",\"value\"}"
+  def generateRandomEvent(
+    sourcesIds: IndexedSeq[String],
+    attributesConfig: IndexedSeq[(String, String, Int, Int)],
+    i: Int
+    ): String = {
+    val source = sourcesIds(getRandomInt(sourcesIds.length))
+    val attrTuple = attributesConfig(getRandomInt(attributesConfig.length))
+    val value = getRandomIntMinMax(attrTuple._3, attrTuple._4)
+    val json = ("source" -> source)~("attribute" -> attrTuple._1)~("uom" -> attrTuple._2)~("value" -> value.toString)
+    compact(render(json))
   }
 }
