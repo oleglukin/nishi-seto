@@ -24,14 +24,12 @@ object EventSourceApp {
       ("vechicle speed", "mk/h", 0, 200)
     )
 
-    val events = 16
-    val maxeventSourceIds = 10
-    val maxIntervalMs = 5
-    val url = "http://localhost:9000/api/signal"
+    val events = getEvents(args)
+    val maxEventSourceIds = getMaxEventSourceIds(args)
+    val maxIntervalMs = getMaxIntervalMs(args)
+    val url = getUrl(args)
 
-    // TODO read config from file
-
-    val sourcesIds = getSources(maxeventSourceIds)
+    val sourcesIds = getSources(maxEventSourceIds)
 
     print(s"${LocalDateTime.now}\nGenerating $events events for ${sourcesIds.length} sources. Max interval between requests: $maxIntervalMs ms\nEvent sources:")
     sourcesIds.foreach(sid => print(sid + " "))
@@ -40,7 +38,8 @@ object EventSourceApp {
 
     // there is no asynchronouse or parallel execution on purpose
     (1 to events).foreach(i => {
-      Thread.sleep(getRandomInt(maxIntervalMs))
+      if (maxIntervalMs > 0) Thread.sleep(getRandomInt(maxIntervalMs))
+
       val json = generateRandomEvent(sourcesIds, attributesConfig, i)
 
       Http(url).postData(json).header("content-type", "application/json").asString.code match {
@@ -78,5 +77,25 @@ object EventSourceApp {
     val value = getRandomIntMinMax(attrTuple._3, attrTuple._4)
     val json = ("source" -> source)~("attribute" -> attrTuple._1)~("uom" -> attrTuple._2)~("value" -> value.toString)
     compact(render(json))
+  }
+
+  def getEvents(args: Array[String]) = args.length match {
+    case l if l >= 1 => args(0).toInt
+    case default => 16
+  }
+
+  def getMaxEventSourceIds(args: Array[String]) = args.length match {
+    case l if l >= 2 => args(1).toInt
+    case default => 10
+  }
+
+  def getMaxIntervalMs(args: Array[String]) = args.length match {
+    case l if l >= 3 => args(2).toInt
+    case default => 0
+  }
+
+  def getUrl(args: Array[String]) = args.length match {
+    case l if l >= 4 => args(3)
+    case default => "http://localhost:9000/api/signal"
   }
 }
