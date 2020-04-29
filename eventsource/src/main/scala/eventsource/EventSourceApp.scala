@@ -27,7 +27,7 @@ object EventSourceApp {
     val events = 16
     val maxeventSourceIds = 10
     val maxIntervalMs = 5
-    val url = ""
+    val url = "http://localhost:9000/api/signal"
 
     // TODO read config from file
 
@@ -43,15 +43,15 @@ object EventSourceApp {
       Thread.sleep(getRandomInt(maxIntervalMs))
       val json = generateRandomEvent(sourcesIds, attributesConfig, i)
 
-      println(json)
-
-      Http(url).postData(json ).header("content-type", "application/json").asString.code
-
-
-      if (events > 1000 && i%1000 == 0) {
-        print(s"${i/1000} ");
+      Http(url).postData(json).header("content-type", "application/json").asString.code match {
+        case 200 => println(s"posted $json")
+        case code => println(s"Post response: $code")
       }
+
+      if (events > 1000 && i%1000 == 0) print(s"${i/1000} ");
     })
+
+    print(s"${LocalDateTime.now}\nFinished posting all events")
   }
 
 
