@@ -1,13 +1,17 @@
 package services
 
+import akka.actor._
 import javax.inject._
 import models.SignalEvent
 
-@Singleton
-class SignalHandler {
+class SignalHandler extends Actor {
 
-    def addEvent(e: SignalEvent) = {
-        println(s"TODO add event to cache. ${e.source}, ${e.attribute}, ${e.uom}, ${e.value}")
+    override def receive = {
+        case e: SignalEvent => println(s"${e.source} ${e.attribute} ${e.uom}, ${e.value}")
     }
+}
 
+
+object SignalHandler {
+    def props = Props[SignalHandler]
 }

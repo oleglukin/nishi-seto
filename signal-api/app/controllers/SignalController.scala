@@ -1,5 +1,6 @@
 package controllers
 
+import akka.actor._
 import javax.inject._
 import play.api._
 import play.api.mvc._
@@ -9,7 +10,9 @@ import models.SignalEvent
 import services.SignalHandler
 
 @Singleton
-class SignalController @Inject()(val controllerComponents: ControllerComponents, val signalHandler: SignalHandler) extends BaseController {
+class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem) extends BaseController {
+
+  val signalHandler = system.actorOf(SignalHandler.props, "signal-handler")
 
   def newSignalEvent() = Action { request =>
     request.body.asJson match {
@@ -17,7 +20,7 @@ class SignalController @Inject()(val controllerComponents: ControllerComponents,
         val parseResult = Json.fromJson[SignalEvent](jsonValue)
         parseResult match {
           case JsSuccess(value, path) => {
-            signalHandler addEvent value
+            signalHandler ! value
             Ok // TODO Internal Error if cannot add event to processing stream
           }
           case JsError(errors) => {
