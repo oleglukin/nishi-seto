@@ -43,7 +43,7 @@ object EventSourceApp {
       val json = generateRandomEvent(sourcesIds, attributesConfig, i)
 
       Http(url).postData(json).header("content-type", "application/json").asString.code match {
-        case 200 => println(s"posted $json")
+        case 200 => ()
         case code => println(s"Post response: $code")
       }
 

@@ -13,4 +13,6 @@ final case class SignalEvent(
 
 object SignalEvent {
     implicit val signalJsonFormat = Json.format[SignalEvent]
+
+    def toJson(e: SignalEvent) = Json.toJson(e).toString
 }

@@ -33,7 +33,7 @@ class SignalController @Inject()(val controllerComponents: ControllerComponents,
         parseResult match {
           case JsSuccess(value, path) => {
             signalHandler ! value
-            Ok // TODO Internal Error if cannot add event to processing stream
+            Ok
           }
           case JsError(errors) => {
             BadRequest("Detected error:" + JsError(errors.take(0).toString()))
