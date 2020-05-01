@@ -7,10 +7,9 @@ import scala.collection.mutable
 import java.io._
 import java.time.LocalDateTime
 
-class SignalHandler extends Actor {
+class SignalHandler(exchangeFolder: String) extends Actor {
 
     val accumulatedEvents = mutable.ArrayBuffer.empty[SignalEvent]
-    val exchangeFolder = "/home/myname/foldername/" // TODO inject
     
     override def receive = {
         case e: SignalEvent => accumulatedEvents += e
@@ -36,9 +35,4 @@ class SignalHandler extends Actor {
         val now = LocalDateTime.now
         s"$exchangeFolder${now.getYear}-${now.getMonthValue}-${now.getDayOfMonth()}_${now.getHour}-${now.getMinute}-${now.getSecond}.txt"
     }
-}
-
-
-object SignalHandler {
-    def props = Props[SignalHandler]
 }

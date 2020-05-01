@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit
 @Singleton
 class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem) extends BaseController {
 
-  val signalHandler = system.actorOf(SignalHandler.props, "signal-handler")
+  val props = Props(classOf[SignalHandler], "/home/myname/foldername/") // TODO read from config or environment
+  val signalHandler = system.actorOf(props, "signal-handler")
 
   //This will schedule to send the Tick-message
   //to the SignalHandler actor every 5 seconds
