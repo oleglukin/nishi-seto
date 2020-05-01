@@ -8,11 +8,23 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import models.SignalEvent
 import services.SignalHandler
+import scala.concurrent.duration.FiniteDuration
+import java.util.concurrent.TimeUnit
 
 @Singleton
 class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem) extends BaseController {
 
   val signalHandler = system.actorOf(SignalHandler.props, "signal-handler")
+
+  //This will schedule to send the Tick-message
+  //to the SignalHandler actor every 5 seconds
+  import system.dispatcher
+  val cancellable =
+    system.scheduler.scheduleAtFixedRate(
+      FiniteDuration(0, TimeUnit.MILLISECONDS),
+      FiniteDuration(5, TimeUnit.SECONDS),
+      signalHandler,
+      "tick")
 
   def newSignalEvent() = Action { request =>
     request.body.asJson match {

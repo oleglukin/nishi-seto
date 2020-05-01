@@ -59,6 +59,7 @@ object EventSourceApp {
     case b => "TR" + getString(2, ('D' to 'R')) + "_" + getStringUpperCase(3) + getStringNumeric(3) + getStringUpperCase(2)
   })
 
+  // functions returning random values
   def getString(length: Int, chars: IndexedSeq[Char]) = (1 to length).map(_ => getRandomChar(chars)).mkString
   def getRandomInt(max: Int) = util.Random.nextInt(max)
   def getRandomIntMinMax(min: Int, max: Int) = getRandomInt(max - min) + min
