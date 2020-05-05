@@ -1,6 +1,8 @@
 package nishiseto
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.Encoders
+
 
 /**
   * Run the app locally, from sbt: sbt "run argument1 argument2"
@@ -13,15 +15,18 @@ object SourceAnalysisLocalApp extends App {
     "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input")
   )
 
-  val spark = SparkSession.builder
-     .master("local")
-     .appName("Word Count")
-     .config("spark.some.config.option", "some-value")
-     .getOrCreate()
+  val spark = SparkSession.builder.master("local").appName(conf("appName")).getOrCreate()
+  spark.sparkContext.setLogLevel("ERROR")
+
+  spark.sparkContext.uiWebUrl match {
+    case Some(value) => println("WebUI: " + value)
+    case None => println("Could not get Spark web UI")
+  }
 
   println(s"Running SourceAnalysisLocalApp. Config:\n${conf("inputFolder")}")
-  Runner run conf
+  Runner.run(spark, conf)
 }
+
 
 /**
   * Use this object to submit the app to a cluster with spark-submit
@@ -32,17 +37,20 @@ object SourceAnalysisApp extends App {
     "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input")
   )
 
-  println("Running SourceAnalysisApp")
-  Runner run conf
+  val spark = SparkSession.builder().getOrCreate()
+  spark.sparkContext.setLogLevel("ERROR")
+
+  println(s"Running SourceAnalysisApp. Config:\n${conf("inputFolder")}")
+  Runner.run(spark, conf)
 }
 
 
 object Runner {
-  def run(conf: Map[String,String]) = {
-    val spark = SparkSession.builder().getOrCreate()
-    
+  def run(spark: SparkSession, conf: Map[String,String]) = {
+    val ds = spark.readStream.format("json").option("inferSchema", "true").text(conf("inputFolder")).as(Encoders.STRING)
 
     SourceAggregation.functionalFailedBySource
+    spark.streams.awaitAnyTermination
   }
 }
 

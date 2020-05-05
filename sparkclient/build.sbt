@@ -1,5 +1,5 @@
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.12.11"
 
 name := "sparkclient"
 organization := "com.oleglukin"
