@@ -12,9 +12,12 @@ import scala.concurrent.duration.FiniteDuration
 import java.util.concurrent.TimeUnit
 
 @Singleton
-class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem) extends BaseController {
+class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem, config: Configuration) extends BaseController {
 
-  val props = Props(classOf[SignalHandler], "/home/myname/foldername/") // TODO read from config or environment
+  val signalOutputFolder = config.get[String]("signal.fileDestinationFolder")
+  val scheduleSec = config.get[Int]("signal.schedule.duration.sec")
+  
+  val props = Props(classOf[SignalHandler], signalOutputFolder)
   val signalHandler = system.actorOf(props, "signal-handler")
 
   //This will schedule to send the Tick-message
@@ -23,7 +26,7 @@ class SignalController @Inject()(val controllerComponents: ControllerComponents,
   val cancellable =
     system.scheduler.scheduleAtFixedRate(
       FiniteDuration(0, TimeUnit.MILLISECONDS),
-      FiniteDuration(5, TimeUnit.SECONDS),
+      FiniteDuration(scheduleSec, TimeUnit.SECONDS),
       signalHandler,
       "tick")
 
