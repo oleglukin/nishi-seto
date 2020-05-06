@@ -5,7 +5,7 @@ import org.apache.spark.sql.Encoders
 
 
 /**
-  * Run the app locally, from sbt: sbt "run argument1 argument2"
+  * Run the app locally, from sbt: sbt "run argument0 argument1"
   * (+ select SourceAnalysisLocalApp when prompted)
   */
 object SourceAnalysisLocalApp extends App {
