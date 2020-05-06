@@ -8,6 +8,15 @@ import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
 
+/**
+  * Run it with the follwoing arguments:
+  * 0: events - number of events, default 16
+  * 1: maxEventSourceIds - number of sourceIDs, default 10
+  * 2: maxIntervalMs - maximum interval (in ms) between event posting, default 0
+  * 3: url - API endpoint for event posting, default http://localhost:9000/api/signal
+  * Example args:
+  * run 16 10 0 http://localhost:9000/api/signal
+  */
 object EventSourceApp {
   val chUpper = ('A' to 'Z')
   val chNum = ('0' to '9')

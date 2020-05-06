@@ -11,3 +11,4 @@ RUNNING_PID
 .g8
 .bloop
 metals.sbt
+.metals
