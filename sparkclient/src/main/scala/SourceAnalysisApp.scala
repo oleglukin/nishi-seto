@@ -2,6 +2,11 @@ package nishiseto
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Encoders
+import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.functions
 
 
 /**
@@ -46,11 +51,30 @@ object SourceAnalysisApp extends App {
 
 
 object Runner {
+  /**
+  * Read new data from input folder
+  */
   def run(spark: SparkSession, conf: Map[String,String]) = {
     val ds = spark.readStream.format("json").option("inferSchema", "true").text(conf("inputFolder")).as(Encoders.STRING)
+    val parsed = parse(ds)
 
-    SourceAggregation.functionalFailedBySource
+    SourceAggregation.validBySource(parsed)
+
     spark.streams.awaitAnyTermination
+  }
+
+  /**
+    * Parse Json strings into rows
+    * @param ds - raw data (json strings)
+    */
+  def parse(ds: Dataset[String]): Dataset[Row] = {
+    val schema = new StructType()
+      .add("source", StringType)
+      .add("attribute", StringType)
+      .add("uom", StringType)
+      .add("value", StringType)
+
+    ds.withColumn("jsonData", functions.from_json(functions.col("value"),schema)).select("jsonData.*")
   }
 }
 
