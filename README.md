@@ -8,7 +8,7 @@ Signal schema:
 
 ```
 {
-  "location": "CPST_GL9951FT", 	// location code / identifier
+  "source": "CPST_GL9951FT", 	// signal source identifier
   "attribute": "Engine Speed", 	// attribute name, e.g. temperature, pressure
   "uom": "rpm", 		// unit of measure
   "value": "927",		// valid value (e.g. a number) or an invalid one like 'read failure'
