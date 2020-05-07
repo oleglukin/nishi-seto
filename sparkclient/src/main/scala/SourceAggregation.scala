@@ -37,7 +37,7 @@ object SourceAggregation {
             def process(e: Row) = {
                 val source = e.getAs[String]("source")
                 val valid = e.getAs[Boolean]("valid")
-                val count = e.getAs[Int]("count")
+                val count = e.getAs[Long]("count")
 
                 println(e)
             }
