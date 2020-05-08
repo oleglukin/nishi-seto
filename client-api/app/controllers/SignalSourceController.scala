@@ -2,12 +2,9 @@ package controllers
 
 import javax.inject._
 import models.SignalSourceAggregation
-import play.api._
 import play.api.mvc._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, JsSuccess, JsError}
 import scala.collection.mutable
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.JsError
 
 @Singleton
 class SignalSourceController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
@@ -20,12 +17,12 @@ class SignalSourceController @Inject()(val controllerComponents: ControllerCompo
     Ok(sourcesJson)
   }
 
-  def getAggregationBySource(sourcename: String) = Action {
-    if (aggMap.contains(sourcename)) {
-      val sourceJson = Json.toJson(aggMap(sourcename))
+  def getAggregationBySource(source: String) = Action {
+    if (aggMap.contains(source)) {
+      val sourceJson = Json.toJson(aggMap(source))
       Ok(sourceJson)
     }
-    else NotFound(sourcename)
+    else NotFound(source)
   }
 
   def getAllAggregations() = Action {
@@ -40,31 +37,24 @@ class SignalSourceController @Inject()(val controllerComponents: ControllerCompo
 
 
   /**
-    * Process new aggregation from spark job
+    * Process new aggregation from spark job - add it to the aggMap
     */
-  def newSourceAggregation() = Action { request =>
-    request.body.asJson match {
-      case Some(jsonValue) => {
-        val parseResult = Json.fromJson[SignalSourceAggregation](jsonValue)
-        parseResult match {
-          case JsSuccess(value, path) => {
-            aggMap += (value.source -> value)
-            Ok
-          }
-          case JsError(errors) => {
-            BadRequest("Detected error:" + JsError(errors.take(0).toString()))
-          }
-        }
-      }
-      case None => BadRequest("Expecting Json data")
-    }
+  def newSourceAggregation(source: String, validStr: String, countStr: String) = Action {
+    val valid = validStr.toBoolean
+    val count = countStr.toLong
+
+    val agg = aggMap.getOrElse(source, new SignalSourceAggregation(source, 0, 0))
+    if (valid) agg.valid += count else agg.failed += count
+    aggMap(source) = agg
+
+    Ok
   }
 
 
-  def removeAggregation(sourcename: String) = Action {
-    aggMap.remove(sourcename) match {
+  def removeAggregation(source: String) = Action {
+    aggMap.remove(source) match {
       case Some(value) => Ok(s"Removed aggregation for '${value.source}'")
-      case None => NotFound(sourcename)
+      case None => NotFound(source)
     }
   }
 
