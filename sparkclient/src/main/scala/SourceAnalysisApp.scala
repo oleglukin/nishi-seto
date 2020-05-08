@@ -16,8 +16,8 @@ import org.apache.spark.sql.functions
 object SourceAnalysisLocalApp extends App {
   val conf = Map(
     "appName" -> "SourceAnalysisJob",
-    "sparkMaster" -> "local",
-    "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input")
+    "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input"),
+    "apiUrl" -> ConfigHelper.getArg(args, 1, "http://localhost:9000/api/source/agg-")
   )
 
   val spark = SparkSession.builder.master("local").appName(conf("appName")).getOrCreate()
@@ -39,7 +39,8 @@ object SourceAnalysisLocalApp extends App {
 object SourceAnalysisApp extends App {
   val conf = Map(
     "appName" -> "SourceAnalysisJob",
-    "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input")
+    "inputFolder" -> ConfigHelper.getArg(args, 0, "/tmp/input"),
+    "apiUrl" -> ConfigHelper.getArg(args, 0, "http://localhost:9000/api/source/agg-")
   )
 
   val spark = SparkSession.builder().getOrCreate()
@@ -58,7 +59,7 @@ object Runner {
     val ds = spark.readStream.format("json").option("inferSchema", "true").text(conf("inputFolder")).as(Encoders.STRING)
     val parsed = parse(ds)
 
-    SourceAggregation.validBySource(parsed)
+    SourceAggregation.validBySource(parsed, conf("apiUrl"))
 
     spark.streams.awaitAnyTermination
   }
