@@ -1,10 +1,11 @@
 # nishi-seto
-Signal processing API and jobs
+Signal processing API and jobs  
 Similar (but simplified version) is written in Java: [shimanami-kaido](https://github.com/oleglukin/shimanami-kaido)
 
 
 ## Business Case
-Suppose that there are certain signals or events that come from some source system. The task is to do some aggregation on the fly and keep current results available for users to view. Signal schema:
+Suppose that there are certain signals or events that come from some source system. The task is to do some aggregation on the fly and keep current results available for users to view.  
+Signal schema:
 
 ```
 {
@@ -31,11 +32,11 @@ It ingests data from a local folder (configurable within the properties file). T
 
 This data should have a schema matching signal event to be parsed (see data model above).
 
-It defines if value is a valid number (otherwise failed) and then groupes by `source` to find total number (count) of functional and failed events for each source.
+It defines if value is a valid number (otherwise failed) and then groupes by `source` to find total number (count) of functional and failed events for each source.  
 Once grouped the data is being sent to an HTTP endpoint (see API methods below).
 
 ### 2. Signal API
-Process incoming signals and output them for Spark jobs to process.
+Process incoming signals and output them for Spark jobs to process.  
 There is one method so far:
 
 ```
@@ -45,14 +46,14 @@ POST    /api/signal                 controllers.SignalController.newSignalEvent
 There is a class called `SignalHandler`. It's purpose is to accumulate new signals from controller and dump them to a text file once in a while.
 
 ### 3. Client API
-Make processing results available for clients.
-Methods:
-`GET     /api/source/list` - returns list of sources that have some aggregations available
-`GET     /api/source/agg-:source` - get aggregation results by source
-`GET     /api/source/all` - get aggregations for all locations
-`GET     /api/source/totalevents` - get total number of events processed
-`POST    /api/source/agg-:source/:valid/:count` - accept new aggregation, add/update in memory to make it available for API clients
-`DELETE  /api/source/agg-:source` - remove aggregation for a given source
+Make processing results available for clients.  
+Methods:  
+`GET     /api/source/list` - returns list of sources that have some aggregations available  
+`GET     /api/source/agg-:source` - get aggregation results by source  
+`GET     /api/source/all` - get aggregations for all locations  
+`GET     /api/source/totalevents` - get total number of events processed  
+`POST    /api/source/agg-:source/:valid/:count` - accept new aggregation, add/update in memory to make it available for API clients  
+`DELETE  /api/source/agg-:source` - remove aggregation for a given source  
 `DELETE  /api/source/all` - remove all aggregations
 
 ### 4. EventSource
