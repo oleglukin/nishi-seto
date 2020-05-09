@@ -12,7 +12,7 @@ class SignalSourceController @Inject()(val controllerComponents: ControllerCompo
   val aggMap = mutable.Map.empty[String,SignalSourceAggregation]
 
 
-  def getListOfKnownSources() = Action {
+  def getListOfKnownSources = Action {
     val sourcesJson = Json.toJson(aggMap.keySet)
     Ok(sourcesJson)
   }
@@ -25,14 +25,17 @@ class SignalSourceController @Inject()(val controllerComponents: ControllerCompo
     else NotFound(source)
   }
 
-  def getAllAggregations() = Action {
+  def getAllAggregations = Action {
     val sourceJson = Json.toJson(aggMap.toList)
     Ok(sourceJson)
   }
 
-  def getTotalEvents() = Action {
-    val total = aggMap.values.map(x => x.failed + x.valid).sum
-    Ok(total.toString())
+  def getTotalEvents = Action {
+    val failed = aggMap.values.map(x => x.failed).sum
+    val valid = aggMap.values.map(x => x.valid).sum
+    val total = failed + valid
+    val result = "{\"valid\":" + valid + ",\"failed\":" + failed + ",\"total\":" + total + "}"
+    Ok(result)
   }
 
 
@@ -58,7 +61,7 @@ class SignalSourceController @Inject()(val controllerComponents: ControllerCompo
     }
   }
 
-  def clearAllAggregations() = Action {
+  def clearAllAggregations = Action {
     aggMap.clear
     Ok
   }
