@@ -25,6 +25,10 @@ There are 4 components (applications) in this repository:
 3. [client-api](https://github.com/oleglukin/nishi-seto/tree/master/client-api)
 4. [eventsource](https://github.com/oleglukin/nishi-seto/tree/master/eventsource)
 
+
+![Components](./components.png)
+
+
 ### 1. Sparkclient
 This application contains Spark driver program and events stream processing logic (aggregation).
 
