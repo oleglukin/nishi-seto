@@ -84,7 +84,7 @@ object EventSourceApp {
     ): String = {
     val source = sourcesIds(getRandomInt(sourcesIds.length))
     val attrTuple = attributesConfig(getRandomInt(attributesConfig.length))
-    val value = getRandomIntMinMax(attrTuple._3, attrTuple._4)
+    val value = getValue(i, attrTuple._3, attrTuple._4)
 
     val json = ("source" -> source)~("attribute" -> attrTuple._1)~("uom" -> attrTuple._2)~("value" -> value.toString)
     compact(render(json))
