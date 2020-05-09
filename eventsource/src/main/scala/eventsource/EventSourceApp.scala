@@ -85,6 +85,7 @@ object EventSourceApp {
     val source = sourcesIds(getRandomInt(sourcesIds.length))
     val attrTuple = attributesConfig(getRandomInt(attributesConfig.length))
     val value = getRandomIntMinMax(attrTuple._3, attrTuple._4)
+
     val json = ("source" -> source)~("attribute" -> attrTuple._1)~("uom" -> attrTuple._2)~("value" -> value.toString)
     compact(render(json))
   }
@@ -107,5 +108,18 @@ object EventSourceApp {
   def getUrl(args: Array[String]) = args.length match {
     case l if l >= 4 => args(3)
     case default => "http://localhost:9000/api/signal"
+  }
+
+  /**
+    * Get random value: a number between min and max or a string
+    */
+  def getValue(i: Int, min: Int, max: Int) = {
+    (i + getRandomInt(7)) % 3 match {
+      case 0 => (i % 2) match {
+        case 0 => "non available"
+        case _ => "lost signal"
+      }
+      case _ => getRandomIntMinMax(min, max)
+    }
   }
 }
