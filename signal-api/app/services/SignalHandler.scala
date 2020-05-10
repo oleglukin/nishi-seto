@@ -13,7 +13,7 @@ class SignalHandler(exchangeFolder: String) extends Actor {
     
     override def receive = {
         case e: SignalEvent => accumulatedEvents += e
-        case "tick" => dumpEventsToFile
+        case "dump" => dumpEventsToFile
     }
 
     def dumpEventsToFile = {

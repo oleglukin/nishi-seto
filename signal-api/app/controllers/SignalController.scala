@@ -21,14 +21,14 @@ class SignalController @Inject()(val controllerComponents: ControllerComponents,
   val signalHandler = system.actorOf(props, "signal-handler")
 
   //This will schedule to send the Tick-message
-  //to the SignalHandler actor every 5 seconds
+  //to the SignalHandler actor every n seconds
   import system.dispatcher
   val cancellable =
     system.scheduler.scheduleAtFixedRate(
       FiniteDuration(0, TimeUnit.MILLISECONDS),
       FiniteDuration(scheduleSec, TimeUnit.SECONDS),
       signalHandler,
-      "tick")
+      "dump")
 
   def newSignalEvent() = Action { request =>
     request.body.asJson match {

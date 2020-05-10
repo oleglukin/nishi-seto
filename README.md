@@ -12,8 +12,7 @@ Signal schema:
   "source": "CPST_GL9951FT", 	// signal source identifier
   "attribute": "Engine Speed", 	// attribute name, e.g. temperature, pressure
   "uom": "rpm", 		// unit of measure
-  "value": "927",		// valid value (e.g. a number) or an invalid one like 'read failure'
-  "timestamp": "2020-04-26T21:47:02.614Z" // date/time
+  "value": "927"		// valid value (e.g. a number) or an invalid one like 'read failure'
 }
 ```
 The basic requirement is to find current number of both functional and failed signals per `source`.
