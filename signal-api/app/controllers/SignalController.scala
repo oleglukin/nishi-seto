@@ -15,21 +15,33 @@ import java.util.concurrent.TimeUnit
 class SignalController @Inject()(val controllerComponents: ControllerComponents, system: ActorSystem, config: Configuration) extends BaseController {
 
   val signalOutputFolder = config.get[String]("signal.fileDestinationFolder")
-  val scheduleSec = config.get[Int]("signal.schedule.duration.sec")
+  val dumpScheduleSec = config.get[Int]("signal.schedule.dump.duration.sec")
+  val clearFolderScheduleSec = config.get[Long]("signal.schedule.clearFodler.duration.sec")
   
-  val props = Props(classOf[SignalHandler], signalOutputFolder)
+  val props = Props(classOf[SignalHandler], signalOutputFolder, clearFolderScheduleSec)
   val signalHandler = system.actorOf(props, "signal-handler")
 
-  //This will schedule to send the Tick-message
-  //to the SignalHandler actor every n seconds
+  // This will schedule to send messages (dump, clear)
+  // to the SignalHandler actor every n seconds
   import system.dispatcher
-  val cancellable =
+  val cancellableDump =
     system.scheduler.scheduleAtFixedRate(
       FiniteDuration(0, TimeUnit.MILLISECONDS),
-      FiniteDuration(scheduleSec, TimeUnit.SECONDS),
+      FiniteDuration(dumpScheduleSec, TimeUnit.SECONDS),
       signalHandler,
       "dump")
 
+  val cancellableClearFolder =
+    system.scheduler.scheduleAtFixedRate(
+      FiniteDuration(0, TimeUnit.MILLISECONDS),
+      FiniteDuration(clearFolderScheduleSec, TimeUnit.SECONDS),
+      signalHandler,
+      "clear folder")
+
+
+  /**
+    * Parse signal json value and send it to SignalHandler actor
+    */
   def newSignalEvent() = Action { request =>
     request.body.asJson match {
       case Some(jsonValue) => {
