@@ -40,6 +40,7 @@ It defines if value is a valid number (otherwise failed) and then groupes by `so
 Once grouped the data is being sent to an HTTP endpoint (see API methods below).
 
 ### 2. Signal API
+See Signal API [Readme file](/signal-api/README.md).  
 Process incoming signals and output them for Spark jobs to process.  
 There is one method so far:
 
@@ -50,6 +51,7 @@ POST    /api/signal                 controllers.SignalController.newSignalEvent
 There is a class called `SignalHandler`. It's purpose is to accumulate new signals from controller and dump them to a text file once in a while.
 
 ### 3. Client API
+See Client API [Readme file](/client-api/README.md).  
 Make processing results available for clients.  
 Methods:  
 `GET     /api/source/list` - returns list of sources that have some aggregations available  
@@ -61,6 +63,7 @@ Methods:
 `DELETE  /api/source/all` - remove all aggregations
 
 ### 4. EventSource
+See EventSource [Readme file](/eventsource/README.md).  
 This is only for testing. Create a number of random events and send them to APIs HTTP endpoint.
 
 
