@@ -16,7 +16,7 @@ class SignalController @Inject()(val controllerComponents: ControllerComponents,
 
   val signalOutputFolder = config.get[String]("signal.fileDestinationFolder")
   val dumpScheduleSec = config.get[Int]("signal.schedule.dump.duration.sec")
-  val clearFolderScheduleSec = config.get[Long]("signal.schedule.clearFodler.duration.sec")
+  val clearFolderScheduleSec = config.get[Long]("signal.schedule.clearFolder.duration.sec")
   
   val props = Props(classOf[SignalHandler], signalOutputFolder, clearFolderScheduleSec)
   val signalHandler = system.actorOf(props, "signal-handler")
