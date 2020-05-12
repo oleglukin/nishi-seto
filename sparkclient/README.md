@@ -18,7 +18,7 @@ Each new aggregation is then posted to the Client API.
 Use sbt to run it like this:  
 `sbt run /tmp/input http://localhost:9000/api/source/agg-`  
 The first argument is the data input folder.  
-The second argument is the Client API endpoint to post source aggregations to. At the end it constructs a URL like this: `http://localhost:9000/api/source/agg-CPST_GL9951FT/true/48813`. See Client API methods documentation.  
+The second argument is the Client API endpoint to post source aggregations to. At the end it constructs a URL like this: `http://localhost:9000/api/source/agg-CPST_GL9951FT/true/48813`. See Client API methods documentation ([readme](/client-api/README.md)).  
 Once compiled select this main class to run: `nishiseto.SourceAnalysisLocalApp`.
 
 # Possible Failures
@@ -26,5 +26,5 @@ Once compiled select this main class to run: `nishiseto.SourceAnalysisLocalApp`.
 `org.apache.spark.sql.AnalysisException: Path does not exist: /some/invalid/path`  
 Make sure that the input folder exists.
 2. Cannot post aggregation to the given Client API endpoint. Should throw and exception like this:  
-`java.net.ConnectException: Connection refused`
+`java.net.ConnectException: Connection refused`  
 Make sure that Client API is running and accessible. Also check client API endpoint provided as an argument to the Spark job.
