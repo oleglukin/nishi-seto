@@ -29,6 +29,7 @@ There are 4 components (applications) in this repository:
 
 
 ### 1. Sparkclient
+See sparckclient [Readme file](/blob/master/sparkclient/README.md).  
 This application contains Spark driver program and events stream processing logic (aggregation).
 
 It ingests data from a local folder (configurable within the properties file). The folder is monitored for new files and the new files are ingested as a stream.
