@@ -9,6 +9,7 @@ The application configuration can be done using environment variables or its con
 - `signal.schedule.clearFolder.duration.sec` - remove old data from the folder using this duration interval. Meaning that files older than this number of seconds should be removed.
 
 
+## API Methods/endpoints
 There is one API method:
 
 ```
@@ -25,5 +26,4 @@ Accepts a signal Json like this:
 	"value": "1006"
 }
 ```
-
 
