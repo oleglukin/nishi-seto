@@ -27,7 +27,7 @@ Accepts a signal Json like this:
 }
 ```
 
-It the accumulates those signals and dump them into text files like this:
+It then accumulates those signals and dumps them into text files like this:
 
 ```
 /home/myname/foldername/2020-05-12_13-57-55.txt
