@@ -25,4 +25,6 @@ Once compiled select this main class to run: `nishiseto.SourceAnalysisLocalApp`.
 1. Input folder is not accessible or doesn't exist. Should throw and exception like this:  
 `org.apache.spark.sql.AnalysisException: Path does not exist: /some/invalid/path`  
 Make sure that the input folder exists.
-2. Cannot post aggregation to the given Client API endpoint.
+2. Cannot post aggregation to the given Client API endpoint. Should throw and exception like this:  
+`java.net.ConnectException: Connection refused`
+Make sure that Client API is running and accessible. Also check client API endpoint provided as an argument to the Spark job.

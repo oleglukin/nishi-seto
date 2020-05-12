@@ -19,10 +19,10 @@ The basic requirement is to find current number of both functional and failed si
 
 ## Components
 There are 4 components (applications) in this repository:
-1. [sparkclient](https://github.com/oleglukin/nishi-seto/tree/master/sparkclient)
-2. [siganl-api](https://github.com/oleglukin/nishi-seto/tree/master/signal-api)
-3. [client-api](https://github.com/oleglukin/nishi-seto/tree/master/client-api)
-4. [eventsource](https://github.com/oleglukin/nishi-seto/tree/master/eventsource)
+1. [sparkclient](/sparkclient)
+2. [siganl-api](/signal-api)
+3. [client-api](/client-api)
+4. [eventsource](/eventsource)
 
 
 ![Components](./components.png)
